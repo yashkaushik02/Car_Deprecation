@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Price Prediction</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .form-group button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .block {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card-header">
+    <div class="col-12">
+      <h1>Car Prediction</h1>
+    </div>
+  </div>
+  <div class="card-body">
+    <form id="carForm" method="post" accept-charset="utf-8">
+        <div class="form-group">
+            <label for="carName">Car Name:</label>
+            <select id="company" name="company" required="1">
+                {% for company in companies %}
+                <option value="{{company}}">{{company}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="carModel">Car Model:</label>
+            <select id="car_model" name="car_model" required="1">
+                {% for car_model in car_models %}
+                  <option value="{{car_model}}">{{car_model}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="buyingYear">Buying Year:</label>
+            <select id="years" name="years" required="1">
+                {% for year in years %}
+                <option value="{{year}}">{{year}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="fuelType">Fuel Type:</label>
+            <select id="fuel_type" name="fuel_type" required="1">
+                  {% for fuel_type in fuel_type %}
+                  <option value="{{fuel_type}}">{{fuel_type}}</option>
+                  {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="kmsDriven">KMs Driven:</label>
+            <input type="number" id="kilo_driven" name="kilo_driven" placeholder="Kilometers">
+        </div>
+        <div class="form-group">
+            <button type="submit" onclick="sendData()">Submit</button>
+        </div>
+    </form>
+
+    <div class="block" id="output">
+        <h4><span id="prediction"></span></h4>
+    </div>
+</div>
+
+<script>
+    function form_handler(event) {
+          event.preventDefault(); // Don't submit the form normally
+      }
+      
+      function sendData(){
+        document.querySelector('form').addEventListener("submit",form_handler);
+        var fd=new FormData(document.querySelector('form'));
+        var xhr= new XMLHttpRequest();
+        xhr.open('POST','/predict',true);
+
+        document.getElementById('prediction').innerHTML="Wait! Prediciting the price";
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == XMLHttpRequest.DONE)
+          document.getElementById('prediction').innerHTML="prediction = Rs. "+ xhr.responseText;
+          }
+
+
+        xhr.onload=function(){};
+        xhr.send(fd);
+      }
+</script>
+
+</body>
+</html>
